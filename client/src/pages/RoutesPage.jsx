@@ -15,12 +15,17 @@ export default function RoutesPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
 
+  const [sourceCoords, setSourceCoords] = useState(null);
+  const [destCoords, setDestCoords] = useState(null);
+
   useEffect(() => {
     if (source && destination) {
       tripAPI.getRoutes({ source, destination })
         .then(res => {
           setLocalRoutes(res.data.routes || []);
           setRoutes(res.data.routes || []);
+          setSourceCoords(res.data.sourceCoords);
+          setDestCoords(res.data.destCoords);
         })
         .catch(() => setLocalRoutes([]))
         .finally(() => setLoading(false));
@@ -45,8 +50,8 @@ export default function RoutesPage() {
         {/* Map */}
         <div className="mb-8">
           <MapView source={source} destination={destination}
-            sourceCoords={routes[0] ? { lat: 28.61, lng: 77.20 } : null}
-            destCoords={routes[0] ? { lat: 32.24, lng: 77.18 } : null} />
+            sourceCoords={sourceCoords}
+            destCoords={destCoords} />
         </div>
 
         {/* Filters */}

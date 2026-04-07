@@ -9,9 +9,9 @@ function calcDistance(lat1, lon1, lat2, lon2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function generateRoutes(source, destination) {
-  const src = cityCoordinates[source.toLowerCase()];
-  const dest = cityCoordinates[destination.toLowerCase()];
+function generateRoutes(source, destination, srcCoords, destCoords) {
+  const src = srcCoords || cityCoordinates[source.toLowerCase()];
+  const dest = destCoords || cityCoordinates[destination.toLowerCase()];
 
   if (!src || !dest) return [];
 

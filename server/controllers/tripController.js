@@ -1,7 +1,8 @@
 import Trip from '../models/Trip.js';
 import Booking from '../models/Booking.js';
 import { generateRoutes } from '../data/mockRoutes.js';
-import { destinations } from '../data/destinations.js';
+import { destinations, cityCoordinates } from '../data/destinations.js';
+import { geocodeCity } from '../services/weatherService.js';
 import { predictTripCost } from '../services/mlService.js';
 import { analyzeBudget as analyzeWithAI } from '../services/aiService.js';
 import { BEST_TIME_DATA } from '../utils/constants.js';
@@ -70,14 +71,30 @@ export const estimate = async (req, res, next) => {
 };
 
 // GET /api/trips/routes
-export const getRoutes = (req, res, next) => {
+export const getRoutes = async (req, res, next) => {
   try {
     const { source, destination } = req.query;
     if (!source || !destination) {
       return res.status(400).json({ message: 'Source and destination are required' });
     }
-    const routes = generateRoutes(source, destination);
-    res.json({ source, destination, routes });
+
+    let srcCoords = cityCoordinates[source.toLowerCase()];
+    let destCoords = cityCoordinates[destination.toLowerCase()];
+
+    // If city is misspelled or not in our mock data, fetch real coordinates!
+    if (!srcCoords || !destCoords) {
+       if (!srcCoords) {
+          const location = await geocodeCity(source);
+          if (location) srcCoords = { lat: location.lat, lng: location.lng };
+       }
+       if (!destCoords) {
+          const location = await geocodeCity(destination);
+          if (location) destCoords = { lat: location.lat, lng: location.lng };
+       }
+    }
+
+    const routes = generateRoutes(source, destination, srcCoords, destCoords);
+    res.json({ source, destination, sourceCoords: srcCoords, destCoords, routes });
   } catch (error) {
     next(error);
   }
