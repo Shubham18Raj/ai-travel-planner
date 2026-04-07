@@ -1,17 +1,27 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const openai = new OpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY || '',
+  baseURL: 'https://openrouter.ai/api/v1',
+});
 
-function getModel() {
-  return genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+const MODEL = 'deepseek/deepseek-r1-distill-llama-70b:free';
+
+/**
+ * Helper: call OpenRouter and get text response
+ */
+async function callAI(messages) {
+  const completion = await openai.chat.completions.create({
+    model: MODEL,
+    messages,
+  });
+  return completion.choices[0].message.content;
 }
 
 /**
  * Generate a day-by-day travel itinerary
  */
 async function generateItinerary({ destination, numDays, budget, interests, groupSize, travelMode, startDate }) {
-  const model = getModel();
-
   const prompt = `You are an expert travel planner for India. Generate a detailed day-by-day itinerary for a trip to ${destination}.
 
 Trip Details:
@@ -22,7 +32,7 @@ Trip Details:
 - Interests: ${interests?.join(', ') || 'general sightseeing'}
 - Start Date: ${startDate || 'flexible'}
 
-Generate a JSON response with this exact structure (no markdown, just JSON):
+Generate a JSON response with this exact structure (no markdown, no code fences, just pure JSON):
 {
   "destination": "${destination}",
   "summary": "Brief 2-line trip summary",
@@ -42,8 +52,7 @@ Generate a JSON response with this exact structure (no markdown, just JSON):
   "importantNotes": ["note1", "note2"]
 }`;
 
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
+  const text = await callAI([{ role: 'user', content: prompt }]);
 
   try {
     const jsonMatch = text.match(/\{[\s\S]*\}/);
@@ -61,8 +70,6 @@ Generate a JSON response with this exact structure (no markdown, just JSON):
  * AI Travel Chatbot
  */
 async function chatWithAI(message, conversationHistory = []) {
-  const model = getModel();
-
   const systemPrompt = `You are TravelGenius, a friendly and knowledgeable AI travel assistant specializing in Indian travel. You help users:
 - Plan trips and suggest destinations
 - Recommend hotels, activities, and restaurants
@@ -73,33 +80,26 @@ async function chatWithAI(message, conversationHistory = []) {
 
 Keep responses concise (under 200 words), helpful, and enthusiastic. Use emojis occasionally. Always provide specific, actionable advice.`;
 
-  const chatHistory = conversationHistory.map(msg => ({
-    role: msg.role === 'user' ? 'user' : 'model',
-    parts: [{ text: msg.content }],
-  }));
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...conversationHistory.map(msg => ({
+      role: msg.role === 'user' ? 'user' : 'assistant',
+      content: msg.content,
+    })),
+    { role: 'user', content: message },
+  ];
 
-  const chat = model.startChat({
-    history: [
-      { role: 'user', parts: [{ text: 'You are a travel assistant. Acknowledge and be ready.' }] },
-      { role: 'model', parts: [{ text: systemPrompt }] },
-      ...chatHistory,
-    ],
-  });
-
-  const result = await chat.sendMessage(message);
-  return result.response.text();
+  return await callAI(messages);
 }
 
 /**
  * Generate a smart packing checklist based on destination and conditions
  */
 async function generateChecklist({ destination, destinationType, season, activities, numDays }) {
-  const model = getModel();
-
   const prompt = `Generate a smart packing checklist for a trip to ${destination} (${destinationType} destination) during ${season} season for ${numDays} days.
 Activities planned: ${activities?.join(', ') || 'general sightseeing'}
 
-Return JSON with this exact structure (no markdown, just JSON):
+Return JSON with this exact structure (no markdown, no code fences, just pure JSON):
 {
   "destination": "${destination}",
   "categories": [
@@ -116,8 +116,7 @@ Return JSON with this exact structure (no markdown, just JSON):
 
 Categories should include: Clothing, Toiletries, Electronics, Documents, Health & Safety, and any destination-specific categories.`;
 
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
+  const text = await callAI([{ role: 'user', content: prompt }]);
 
   try {
     const jsonMatch = text.match(/\{[\s\S]*\}/);
@@ -135,8 +134,6 @@ Categories should include: Clothing, Toiletries, Electronics, Documents, Health 
  * AI Budget Analyzer — suggests cheapest travel mode + hotel type + tips
  */
 async function analyzeBudget({ source, destination, numDays, groupSize, totalBudget }) {
-  const model = getModel();
-
   const prompt = `Analyze this trip budget and provide smart recommendations:
 
 Trip: ${source} to ${destination}
@@ -144,7 +141,7 @@ Duration: ${numDays} days
 Group Size: ${groupSize} people
 Total Budget: ₹${totalBudget}
 
-Return JSON with this exact structure (no markdown, just JSON):
+Return JSON with this exact structure (no markdown, no code fences, just pure JSON):
 {
   "feasibility": "comfortable/tight/over-budget",
   "recommendedMode": "train/bus/flight/car",
@@ -161,8 +158,7 @@ Return JSON with this exact structure (no markdown, just JSON):
   "perPersonCost": 10000
 }`;
 
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
+  const text = await callAI([{ role: 'user', content: prompt }]);
 
   try {
     const jsonMatch = text.match(/\{[\s\S]*\}/);

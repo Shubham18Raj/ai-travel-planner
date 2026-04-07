@@ -2,6 +2,7 @@
   "name": "ai-travel-planner-server",
   "version": "1.0.0",
   "description": "Backend API for AI-Powered Smart Travel Planner",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,7 +10,6 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.12.0",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -17,7 +17,8 @@
     "express": "^4.19.2",
     "express-validator": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.4.1"
+    "mongoose": "^8.4.1",
+    "openai": "^4.52.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",

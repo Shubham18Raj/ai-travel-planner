@@ -1,18 +1,18 @@
 # 🧠 TravelGenius — AI-Powered Smart Travel Planner
 
 ![MERN](https://img.shields.io/badge/MERN-Full_Stack-blue?style=for-the-badge)
-![AI](https://img.shields.io/badge/AI-Google_Gemini-orange?style=for-the-badge)
+![AI](https://img.shields.io/badge/AI-OpenRouter-orange?style=for-the-badge)
 ![ML](https://img.shields.io/badge/ML-Scikit_Learn-green?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-> A modern MERN-based travel planning web application with **real AI** (Google Gemini), **ML-powered cost estimation**, group expense splitting, and intelligent travel recommendations. Every API used is **100% free**.
+> A modern MERN-based travel planning web application with **real AI** (OpenRouter — free), **ML-powered cost estimation**, group expense splitting, and intelligent travel recommendations. Every API used is **100% free**.
 
 ## ✨ Features
 
 | Feature | Technology |
 |---------|-----------|
-| 🗓️ AI Itinerary Generator | Google Gemini API |
-| 💬 AI Travel Chatbot | Google Gemini API |
+| 🗓️ AI Itinerary Generator | OpenRouter API (free) |
+| 💬 AI Travel Chatbot | OpenRouter API (free) |
 | 📊 ML Cost Estimator | RandomForest + FastAPI |
 | 💰 Group Expense Split | Splitwise Algorithm |
 | 🌦️ Live Weather Forecast | Open-Meteo API (free) |
@@ -29,7 +29,7 @@ Client (React + Tailwind) ──► Express.js API ──► MongoDB Atlas
                                     │
                               ┌─────┼─────┐
                               ▼     ▼     ▼
-                          Gemini  Open   FastAPI
+                        OpenRouter Open   FastAPI
                            API   Meteo  ML Server
 ```
 
@@ -37,7 +37,7 @@ Client (React + Tailwind) ──► Express.js API ──► MongoDB Atlas
 
 **Frontend:** React 18, Vite, Tailwind CSS 3, React Router v6, Axios, Recharts, Leaflet, React Hook Form + Zod
 
-**Backend:** Node.js, Express.js, MongoDB + Mongoose, JWT, Google Generative AI SDK
+**Backend:** Node.js, Express.js, MongoDB + Mongoose, JWT, OpenAI SDK (for OpenRouter)
 
 **ML Server:** Python, FastAPI, Scikit-learn, XGBoost, Pandas, NumPy
 
@@ -47,7 +47,7 @@ Client (React + Tailwind) ──► Express.js API ──► MongoDB Atlas
 - Node.js 18+
 - Python 3.9+
 - MongoDB (local or Atlas)
-- Google Gemini API Key ([free from aistudio.google.com](https://aistudio.google.com))
+- OpenRouter API Key ([free from openrouter.ai/keys](https://openrouter.ai/keys))
 
 ### 1. Clone & Install
 
@@ -74,7 +74,7 @@ Edit `server/.env`:
 ```env
 MONGODB_URI=mongodb://localhost:27017/travelplanner
 JWT_SECRET=your-secret-key
-GEMINI_API_KEY=your-gemini-api-key
+OPENROUTER_API_KEY=your-openrouter-api-key
 ML_SERVER_URL=http://localhost:8000
 PORT=5000
 ```
@@ -122,7 +122,7 @@ Open [http://localhost:5173](http://localhost:5173) 🎉
 
 | Service | Purpose | Cost |
 |---------|---------|------|
-| Google Gemini | AI features | Free (15 RPM, 1M tokens/month) |
+| OpenRouter | AI features | Free (no billing required, free models available) |
 | Open-Meteo | Weather | Free (no key needed) |
 | OpenStreetMap | Maps | Free (open source) |
 | MongoDB Atlas | Database | Free (512MB M0 cluster) |

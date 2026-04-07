@@ -1,0 +1,100 @@
+{
+  "features": [
+    "source_city",
+    "destination_city",
+    "distance",
+    "travel_mode",
+    "season",
+    "num_days",
+    "hotel_type",
+    "activity_level",
+    "food_preference",
+    "group_size"
+  ],
+  "targets": [
+    "total_cost",
+    "travel_cost",
+    "stay_cost",
+    "food_cost",
+    "activity_cost"
+  ],
+  "categorical_features": [
+    "source_city",
+    "destination_city",
+    "travel_mode",
+    "season",
+    "hotel_type",
+    "activity_level",
+    "food_preference"
+  ],
+  "label_mappings": {
+    "source_city": [
+      "Ahmedabad",
+      "Bangalore",
+      "Chandigarh",
+      "Chennai",
+      "Delhi",
+      "Hyderabad",
+      "Kolkata",
+      "Lucknow",
+      "Mumbai",
+      "Pune"
+    ],
+    "destination_city": [
+      "Agra",
+      "Andaman",
+      "Darjeeling",
+      "Goa",
+      "Jaipur",
+      "Jaisalmer",
+      "Kerala",
+      "Ladakh",
+      "Manali",
+      "Munnar",
+      "Ooty",
+      "Rishikesh",
+      "Shimla",
+      "Udaipur",
+      "Varanasi"
+    ],
+    "travel_mode": [
+      "bus",
+      "car",
+      "flight",
+      "train"
+    ],
+    "season": [
+      "autumn",
+      "monsoon",
+      "summer",
+      "winter"
+    ],
+    "hotel_type": [
+      "3-star",
+      "4-star",
+      "5-star",
+      "budget",
+      "hostel"
+    ],
+    "activity_level": [
+      "high",
+      "low",
+      "moderate"
+    ],
+    "food_preference": [
+      "budget",
+      "luxury",
+      "mixed"
+    ]
+  },
+  "metrics": {
+    "mae": 6005.123608769236,
+    "r2": 0.9633223650348416
+  },
+  "n_samples": 5000,
+  "best_params": {
+    "max_depth": 15,
+    "min_samples_split": 2,
+    "n_estimators": 200
+  }
+}
