@@ -76,11 +76,7 @@ export default function Navbar() {
                   <div className="absolute right-0 top-12 w-56 glass-card p-2 animate-scale-in">
                     <Link to="/profile" onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 text-surface-200 hover:text-white transition-all">
-                      <FiUser className="text-primary-400" /> My Profile
-                    </Link>
-                    <Link to="/my-trips" onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 text-surface-200 hover:text-white transition-all">
-                      <FiMapPin className="text-primary-400" /> My Trips
+                      <FiUser className="text-primary-400" /> My Profile & Trips
                     </Link>
                     <Link to="/group-split" onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 text-surface-200 hover:text-white transition-all">

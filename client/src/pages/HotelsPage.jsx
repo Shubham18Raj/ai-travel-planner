@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { hotelAPI } from '../services/api';
 import HotelCard from '../components/HotelCard';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 export default function HotelsPage() {
   const [searchParams] = useSearchParams();
@@ -9,6 +11,7 @@ export default function HotelsPage() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ type: '', sort: 'rating', minRating: '' });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const params = { city, ...filters };
@@ -68,7 +71,10 @@ export default function HotelsPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {hotels.map((hotel, i) => (
-              <HotelCard key={i} hotel={hotel} onSelect={(h) => console.log('Selected:', h)} />
+              <HotelCard key={i} hotel={hotel} onSelect={(h) => {
+                toast.success(`${h.name} selected for your trip!`);
+                navigate('/booking');
+              }} />
             ))}
           </div>
         )}
