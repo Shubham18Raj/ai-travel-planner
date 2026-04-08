@@ -40,7 +40,7 @@ export default function CostBreakdownCard({ estimation, chartType = 'pie' }) {
         {chartType === 'pie' ? (
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
-              <Pie data={data} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={3} dataKey="value"
+              <Pie data={data} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value"
                 label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                 labelLine={{ stroke: '#64748b' }}>
                 {data.map((entry, i) => (
