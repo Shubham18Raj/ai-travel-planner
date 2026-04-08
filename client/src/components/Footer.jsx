@@ -76,7 +76,7 @@ export default function Footer() {
             © {new Date().getFullYear()} TravelGenius. All rights reserved.
           </p>
           <p className="text-surface-500 text-sm flex items-center gap-1">
-            Built with <FiHeart className="text-red-500" size={14} /> for B.Tech Final Year Project
+            Built with <FiHeart className="text-red-500" size={14} /> by Shubham Raj
           </p>
         </div>
       </div>
