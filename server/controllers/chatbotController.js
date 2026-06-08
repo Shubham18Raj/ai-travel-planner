@@ -1,38 +1,27 @@
 import { chatWithAI } from '../services/aiService.js';
 
-// In-memory conversation store (per session — resets on server restart)
-const conversations = new Map();
-
 // POST /api/chatbot/message
 export const chat = async (req, res, next) => {
   try {
-    const { message, sessionId } = req.body;
+    const { message, history = [] } = req.body;
 
-    if (!message) {
-      return res.status(400).json({ message: 'Message is required' });
+    if (!message || typeof message !== 'string' || !message.trim()) {
+      return res.status(400).json({ success: false, message: 'Message is required' });
     }
 
-    const sid = sessionId || req.userId.toString();
-    const history = conversations.get(sid) || [];
+    // BUG 1 FIX: use history sent from frontend instead of in-memory Map
+    // This makes it stateless and works correctly across page refreshes
+    const reply = await chatWithAI(message.trim(), history);
 
-    const reply = await chatWithAI(message, history);
-
-    // Update conversation history
-    history.push({ role: 'user', content: message });
-    history.push({ role: 'assistant', content: reply });
-
-    // Keep only last 20 messages to manage context window
-    if (history.length > 20) {
-      history.splice(0, history.length - 20);
-    }
-    conversations.set(sid, history);
-
-    res.json({ reply, sessionId: sid });
+    return res.status(200).json({ success: true, reply });
   } catch (error) {
-    console.error('Chatbot error:', error.message);
-    res.json({
-      reply: "I'm having trouble connecting right now. Please try again in a moment! 🔄",
-      error: true,
+    // BUG 2 FIX: log the FULL error (not just message) so you can see what's wrong
+    console.error('Chatbot error:', error);
+
+    // BUG 2 FIX: return a real 500 so the frontend catch() block fires
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'AI service unavailable. Please try again.',
     });
   }
 };
